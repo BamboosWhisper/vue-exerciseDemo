@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue Test</title>
+    <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+    div#app {
+      width: 50%;
+      margin: 4rem auto;
+    }
+    div#app h3 {
+      margin-bottom: 0.5rem;
+    }
+    input.new-item{
+      margin:.3rem 0;
+      line-height:1.4rem;
+      padding:.2rem .1rem;
+      border-radius:.3rem;
+      margin-bottom: 2rem;
+    }
+    .itemcontainer{
+      display:flex;
+      justify-content:flex-start;
+      width:30rem;
+      align-items: center;
+      padding: .3rem .1rem;
+      position:relative;
+      left:-0.43rem;
+    }
+    input[type="checkbox"]{
+      padding:0 .5rem;
+      width:5%;
+    }
+    .itemcontainer span{
+      background-color:#d46161;
+      border:1px solid gray;
+      border-radius:.5rem;
+      margin-left: 1rem;
+      padding: 0 .5rem;
+      cursor:pointer;
+    }
+    .done{
+      color:gray;
+      text-decoration:line-through;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+        <h3>记事本简易demo</h3>
+        <input  @keypress='addItem' class="new-item" placeholder="输入事项"/>
+        <div v-for="item in message">
+          <div class="itemcontainer">
+            <input type="checkbox" @click="finishItem(item.index)"/>
+            <p :class='{"done":item.isdone}'>{{item.content}}</p>
+            <span @click="deleteItem(item.index)">delete</span>
+          </div>`
+        </div>
+    </div>
+    
+    <script src="http://cdn.bootcss.com/vue/2.1.10/vue.js"></script>
+    <script>
+    var vm = new Vue({
+      el:'#app',
+      data:{
+        message:[],
+        item:{
+          content:'',
+          isdone:false,
+          index:0
+        }
+      },
+      methods:{
+        deleteItem(index){
+          var message = this.message;
+          this.message = message.filter(item=>item.index!==index)
+        },
+        addItem(e){
+          if(e.keyCode==13)
+          {
+            var message = this.message;
+            var len = message.length;
+            this.item.content = e.target.value;
+            this.item.index = len;
+            this.message.push(this.item)
+          }         
+        },
+        finishItem(index){
+          var message = this.message;
+          this.message[index].isdone = !message[index].isdone;
+        }
+      }
+    })   
+    </script>
+  </body>
+</html>
