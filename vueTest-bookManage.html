@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>【VueDemo】简易书籍管理</title>
+    <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+    body{
+      font-family:"Microsoft YaHei";
+    }
+    div#app{
+      margin:2rem 4rem;
+    }
+    .book-shelf,
+    .add-book{
+      border:2px solid orange;
+      border-radius:0.5rem;
+      margin:5rem;
+      padding:3rem;
+    }
+    .add-book h3{
+      font-size:1.2rem;
+      font-weight:600;
+      border-bottom:1px solid orange;
+      margin-bottom:3rem;
+    }
+    .add-book input{
+      display:block;
+    }
+    .add-book input,
+    .add-book label{
+      width:100%;
+      line-height:1.6rem;
+    }
+    .add-book button{
+      display:block;
+      width:60%;
+      margin: 1rem auto;
+      line-height: 2rem;
+      background-color: orange;
+      border: none;
+      color: azure;
+    }
+    .head,
+    .book-item{
+      width:100%;
+      display:table;
+      line-height:2rem;
+    }
+    .book-item{
+      border-top: 1px solid gainsboro;
+    }
+    .head span,
+    .book-item span{
+      display:table-cell;
+      text-align:center;
+      width:20%;
+    }
+    span.delete{
+      background-color: orange;
+      cursor:pointer;
+      border: 2px solid gainsboro;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="book-shelf">
+        <div class="head">
+          <span>序号</span>
+          <span>书名</span>
+          <span>作者</span>
+          <span>价格</span>
+          <span>操作</span>
+        </div>
+        <div class="book-wrapper" v-for="book in books">
+          <bookdetail :book="book" @deleteBook="deleteBook"></bookdetail>
+        </div>
+        <span class="price_sum"></span>
+      </div>
+      <div class="add-book">
+        <h3>添加书籍</h3>
+        <label>书名</label>
+        <input id="book_name" v-model="book.name"/>
+        <label>作者</label>
+        <input id="book_author" v-model="book.author"/>
+        <label>价格</label>
+        <input id="book_price" v-model="book.price"/>
+        <button @click="addBook(book.index)">添加</button>
+      </div>
+      
+    </div>
+    <template id="book-detail">
+      <div class="book-item">
+        <span>{{book.index}}</span>
+        <span>{{book.name}}</span>
+        <span>{{book.author}}</span>
+        <span>{{book.price}}</span>
+        <span class="delete"@click="deleteBookInner">删除</span>
+      </div>
+    </template>
+    
+
+    <script src="http://cdn.bootcss.com/vue/2.1.10/vue.js"></script>
+    <script>
+      var app = new Vue({
+        el:'#app',
+        data:{
+          books:[],
+          book:{
+            index:'',
+            name:'',
+            author:'',
+            price:'',
+          }
+        },
+        methods:{
+          addBook(){
+            this.book.index = this.books.length+1;
+            this.books.push(this.book);
+            this.book = {
+              index:'',
+              name:'',
+              author:'',
+              price:'',
+            }
+          },
+          deleteBook(index){
+            let books_ = this.books.filter((item)=>(item.index!==index))
+            this.books = book_;
+          }
+        },
+        components:{
+          'bookdetail':{
+            props:['book'],
+            template:"#book-detail",            
+            methods:{
+              deleteBookInner(index){
+                this.$emit('deleteBook')
+              }
+            }
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
